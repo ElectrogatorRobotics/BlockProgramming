@@ -35,9 +35,29 @@ function runOpMode() {
   telemetry.update();
   linearOpMode.waitForStart();
   InitMotors();
-  MotorTargPos(700, 700);
+  MotorTargPos(1400, 1400);
   MotorStraight(1, 1);
-  while (frontleftdrive.getCurrentPosition() < 700 && linearOpMode.opModeIsActive()) {
+  while (frontleftdrive.getCurrentPosition() < 1400 && linearOpMode.opModeIsActive()) {
+    telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
+    telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
+    telemetry.update();
+  }
+  MotorSlide(0);
+  MotorResetPosition();
+  InitMotors();
+  MotorTargPosSlide(1400, 1400);
+  MotorSlide(1);
+  while (frontleftdrive.getCurrentPosition() < 1400 && linearOpMode.opModeIsActive()) {
+    telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
+    telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
+    telemetry.update();
+  }
+  MotorSlide(0);
+  MotorResetPosition();
+  InitMotors();
+  MotorTargPos(500, 500);
+  MotorStraight(1, 1);
+  while (frontleftdrive.getCurrentPosition() < 500 && linearOpMode.opModeIsActive()) {
     telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
     telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
     telemetry.update();

@@ -32,20 +32,24 @@ function runOpMode() {
 /**
  * Describe this function...
  */
-function InitClaw() {
-  rightclaw.setDirection("REVERSE");
-  rightclaw.setPosition(0.6);
-  leftclaw.setPosition(0.6);
+function InitMotors() {
+  frontrightdrive.setDualMode("RUN_USING_ENCODER", frontleftdrive, "RUN_USING_ENCODER");
+  backleftdrive.setDualMode("RUN_USING_ENCODER", backrightdrive, "RUN_USING_ENCODER");
+  backrightdrive.setDualTargetPosition(420, backleftdrive, 420);
+  frontrightdrive.setDualTargetPosition(420, frontleftdrive, 420);
+  backleftdrive.setDirection("FORWARD");
+  backrightdrive.setDirection("REVERSE");
+  frontleftdrive.setDirection("FORWARD");
+  frontrightdrive.setDirection("REVERSE");
 }
 
 /**
  * Describe this function...
  */
-function InitMotors() {
-  frontrightdrive.setDualMode("RUN_WITHOUT_ENCODER", frontleftdrive, "RUN_WITHOUT_ENCODER");
-  backleftdrive.setDualMode("RUN_WITHOUT_ENCODER", backrightdrive, "RUN_WITHOUT_ENCODER");
-  backleftdrive.setDirection("REVERSE");
-  frontrightdrive.setDirection("REVERSE");
+function InitClaw() {
+  rightclaw.setDirection("REVERSE");
+  rightclaw.setPosition(0.6);
+  leftclaw.setPosition(0.6);
 }
 
 /**
@@ -71,8 +75,3 @@ function MotorSpeed(DriveSpeedL, DriveSpeedR) {
   frontrightdrive.setDualPower(DriveSpeedR, backrightdrive, DriveSpeedR);
   frontleftdrive.setDualPower(DriveSpeedL, backleftdrive, DriveSpeedL);
 }
-
-
-elapsedTimeAccess.reset(RunTimer);
-
-elapsedTimeAccess.create_withResolution("SECONDS");

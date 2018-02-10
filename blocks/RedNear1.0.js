@@ -31,17 +31,37 @@ function runOpMode() {
   RunTimer = elapsedTimeAccess.create_withResolution("SECONDS");
   MotorResetPosition();
   telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
-  telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
+  telemetry.addTextData('MotorPositionR', String('text'));
   telemetry.update();
   linearOpMode.waitForStart();
   InitMotors();
+  MotorTargPosSlide(-4200, -4200);
+  MotorSlide(1);
+  while (frontleftdrive.getCurrentPosition() > -4200 && linearOpMode.opModeIsActive()) {
+    telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
+    telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
+    telemetry.update();
+  }
+  MotorSlide(0);
+  MotorResetPosition();
+  InitMotors();
   MotorTargPos(700, 700);
-  MotorStraight(1, 1);
+  MotorSlide(0.5);
   while (frontleftdrive.getCurrentPosition() < 700 && linearOpMode.opModeIsActive()) {
     telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
     telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
     telemetry.update();
   }
+  MotorSlide(0);
+}
+
+/**
+ * Describe this function...
+ */
+function SetupLift() {
+  liftmotor1.setDirection("FORWARD");
+  liftmotor2.setDirection("REVERSE");
+  liftmotor1.setDualMode("RUN_WITHOUT_ENCODER", liftmotor2, "RUN_WITHOUT_ENCODER");
 }
 
 /**
@@ -89,9 +109,33 @@ function MotorSlide(SlideSpeed) {
 /**
  * Describe this function...
  */
+function setGripClose() {
+  rightclaw.setPosition(0.4);
+  leftclaw.setPosition(0.4);
+}
+
+/**
+ * Describe this function...
+ */
 function MotorTargPosSlide(PositionLeft, PositionRight) {
   frontleftdrive.setDualTargetPosition(PositionLeft, backleftdrive, -PositionLeft);
   frontrightdrive.setDualTargetPosition(-PositionRight, backrightdrive, PositionRight);
+}
+
+/**
+ * Describe this function...
+ */
+function setGripOpen() {
+  rightclaw.setPosition(0.64);
+  leftclaw.setPosition(0.64);
+}
+
+/**
+ * Describe this function...
+ */
+function setGrip() {
+  rightclaw.setDirection("FORWARD");
+  leftclaw.setDirection("REVERSE");
 }
 
 
