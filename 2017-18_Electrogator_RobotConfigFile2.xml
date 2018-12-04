@@ -10,7 +10,6 @@
             <Servo name="extension claw" port="2" />
             <Servo name="extension claw wrist" port="3" />
             <DigitalDevice name="lift touch sensor" port="0" />
-            <LynxColorSensor name="Jewel color sensor" port="0" bus="0" />
         </LynxModule>
         <LynxModule name="Expansion Hub 3" port="3">
             <Motor name="front right drive" port="0" />

@@ -24,7 +24,6 @@ function MotorResetPosition() {
  */
 function runOpMode() {
   RunTimer = elapsedTimeAccess.create_withResolution("SECONDS");
-  setGrip();
   SetupLift();
   telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
   telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
@@ -100,11 +99,13 @@ function setGripOpen() {
  * Describe this function...
  */
 function RaiseLift() {
+  setGrip();
   elapsedTimeAccess.reset(RunTimer);
   while (elapsedTimeAccess.getMilliseconds(RunTimer) < 1500 && linearOpMode.opModeIsActive()) {
     telemetry.addTextData('LiftTimer', String(RunTimer));
     telemetry.update();
   }
+  setGripClose();
   liftmotor1.setDualPower(1, liftmotor2, 1);
   elapsedTimeAccess.reset(RunTimer);
   while (elapsedTimeAccess.getMilliseconds(RunTimer) < 1000 && linearOpMode.opModeIsActive()) {
@@ -162,9 +163,9 @@ function Turn() {
 function DriveStraight2() {
   MotorResetPosition();
   InitMotors();
-  MotorTargPos(850, 850);
-  MotorStraight(0.5, 0.5);
-  while (frontleftdrive.getCurrentPosition() < 850 && linearOpMode.opModeIsActive()) {
+  MotorTargPos(800, 800);
+  MotorStraight(0.25, 0.25);
+  while (frontleftdrive.getCurrentPosition() < 800 && linearOpMode.opModeIsActive()) {
     telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
     telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
     telemetry.update();

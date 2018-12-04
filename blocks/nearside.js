@@ -24,17 +24,16 @@ function MotorResetPosition() {
  */
 function runOpMode() {
   RunTimer = elapsedTimeAccess.create_withResolution("SECONDS");
-  SetupLift();
-  telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
-  telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
+  telemetryAddTextData('MotorPositionL', frontleftdrive.getCurrentPosition());
+  telemetryAddTextData('MotorPositionR', frontrightdrive.getCurrentPosition());
   telemetry.update();
   linearOpMode.waitForStart();
-  RaiseLift();
-  DriveStraight();
+  deploylegs();
+  slide();
+  deploylegs2();
+  DriveStraight(2100);
   Turn();
-  DriveStraight2();
-  setGripOpen();
-  Backup();
+  DriveStraight(2100);
 }
 
 /**
@@ -73,9 +72,38 @@ function SetupLift() {
 /**
  * Describe this function...
  */
-function setGripClose() {
-  rightclaw.setPosition(0.4);
-  leftclaw.setPosition(0.4);
+function deploylegs() {
+  frontleftservo.setDirection("FORWARD");
+  frontrightservo.setDirection("FORWARD");
+  backleftservo.setDirection("FORWARD");
+  backrightservo.setDirection("FORWARD");
+  backrightservo.setPosition(0.3);
+  backleftservo.setPosition(0.3);
+  while (backrightservo.getPosition() > 0.4) {
+    telemetry.addNumericData('Position', backrightservo.getPosition());
+  }
+  frontrightservo.setPosition(0.3);
+  frontleftservo.setPosition(0.3);
+  while (frontleftservo.getPosition() > 0.35) {
+    telemetry.addNumericData('Position', frontleftservo.getPosition());
+  }
+}
+
+/**
+ * Describe this function...
+ */
+function deploylegs2() {
+  frontleftservo.setDirection("FORWARD");
+  frontrightservo.setDirection("FORWARD");
+  backleftservo.setDirection("FORWARD");
+  backrightservo.setDirection("FORWARD");
+  backrightservo.setPosition(0.2);
+  backleftservo.setPosition(0.2);
+  frontrightservo.setPosition(0.2);
+  frontleftservo.setPosition(0.2);
+  while (frontleftservo.getPosition() > 0.25) {
+    telemetry.addNumericData('Position', frontleftservo.getPosition());
+  }
 }
 
 /**
@@ -89,26 +117,16 @@ function MotorTargPosSlide(PositionLeft, PositionRight) {
 /**
  * Describe this function...
  */
-function setGripOpen() {
-  rightclaw.setPosition(0.64);
-  leftclaw.setPosition(0.64);
-}
-
-/**
- * Describe this function...
- */
 function RaiseLift() {
-  setGrip();
   elapsedTimeAccess.reset(RunTimer);
   while (elapsedTimeAccess.getMilliseconds(RunTimer) < 1500 && linearOpMode.opModeIsActive()) {
-    telemetry.addTextData('LiftTimer', String(RunTimer));
+    telemetryAddTextData('LiftTimer', RunTimer);
     telemetry.update();
   }
-  setGripClose();
   liftmotor1.setDualPower(1, liftmotor2, 1);
   elapsedTimeAccess.reset(RunTimer);
   while (elapsedTimeAccess.getMilliseconds(RunTimer) < 1000 && linearOpMode.opModeIsActive()) {
-    telemetry.addTextData('LiftTimer', String(RunTimer));
+    telemetryAddTextData('LiftTimer', RunTimer);
     telemetry.update();
   }
   liftmotor1.setDualPower(0, liftmotor2, 0);
@@ -117,25 +135,14 @@ function RaiseLift() {
 /**
  * Describe this function...
  */
-function setGrip() {
-  rightclaw.setDirection("FORWARD");
-  leftclaw.setDirection("REVERSE");
-  rightclaw.setPosition(0.49);
-  leftclaw.setPosition(0.49);
-}
-
-/**
- * Describe this function...
- */
-function DriveStraight() {
-  x = 2100;
+function DriveStraight(x) {
   MotorResetPosition();
   InitMotors();
   MotorTargPos(x, x);
   MotorStraight(0.5, 0.5);
   while (frontleftdrive.getCurrentPosition() < x && linearOpMode.opModeIsActive()) {
-    telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
-    telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
+    telemetryAddTextData('MotorPositionL', frontleftdrive.getCurrentPosition());
+    telemetryAddTextData('MotorPositionR', frontrightdrive.getCurrentPosition());
     telemetry.update();
   }
   MotorSlide(0);
@@ -150,8 +157,8 @@ function Turn() {
   MotorTargPos(1300, -1300);
   MotorStraight(1, 1);
   while (frontleftdrive.getCurrentPosition() < 1300 && linearOpMode.opModeIsActive()) {
-    telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
-    telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
+    telemetryAddTextData('MotorPositionL', frontleftdrive.getCurrentPosition());
+    telemetryAddTextData('MotorPositionR', frontrightdrive.getCurrentPosition());
     telemetry.update();
   }
   MotorSlide(0);
@@ -161,13 +168,14 @@ function Turn() {
  * Describe this function...
  */
 function DriveStraight2() {
+  x = 2100;
   MotorResetPosition();
   InitMotors();
-  MotorTargPos(800, 800);
+  MotorTargPos(x, x);
   MotorStraight(0.25, 0.25);
   while (frontleftdrive.getCurrentPosition() < 800 && linearOpMode.opModeIsActive()) {
-    telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
-    telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
+    telemetryAddTextData('MotorPositionL', frontleftdrive.getCurrentPosition());
+    telemetryAddTextData('MotorPositionR', frontrightdrive.getCurrentPosition());
     telemetry.update();
   }
   MotorSlide(0);
@@ -176,14 +184,14 @@ function DriveStraight2() {
 /**
  * Describe this function...
  */
-function Backup() {
+function slide() {
   MotorResetPosition();
   InitMotors();
-  MotorTargPos(-300, -300);
-  MotorStraight(1, 1);
-  while (frontleftdrive.getCurrentPosition() > -300 && linearOpMode.opModeIsActive()) {
-    telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
-    telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
+  MotorTargPosSlide(100, 100);
+  MotorSlide(1);
+  while (frontleftdrive.getCurrentPosition() < 100 && linearOpMode.opModeIsActive()) {
+    telemetryAddTextData('MotorPositionL', frontleftdrive.getCurrentPosition());
+    telemetryAddTextData('MotorPositionR', frontrightdrive.getCurrentPosition());
     telemetry.update();
   }
   MotorSlide(0);

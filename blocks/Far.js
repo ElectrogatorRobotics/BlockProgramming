@@ -3,6 +3,26 @@ var RunTimer, x, DriveSpeedL, DriveSpeedR, SlideSpeed, hue, colorHSV, sat, val, 
 /**
  * Describe this function...
  */
+function RaiseLift() {
+  setGrip();
+  elapsedTimeAccess.reset(RunTimer);
+  while (elapsedTimeAccess.getMilliseconds(RunTimer) < 1500 && linearOpMode.opModeIsActive()) {
+    telemetry.addTextData('LiftTimer', String(RunTimer));
+    telemetry.update();
+  }
+  setGripClose();
+  liftmotor1.setDualPower(1, liftmotor2, 1);
+  elapsedTimeAccess.reset(RunTimer);
+  while (elapsedTimeAccess.getMilliseconds(RunTimer) < 1000 && linearOpMode.opModeIsActive()) {
+    telemetry.addTextData('LiftTimer', String(RunTimer));
+    telemetry.update();
+  }
+  liftmotor1.setDualPower(0, liftmotor2, 0);
+}
+
+/**
+ * Describe this function...
+ */
 function do_something() {
   while (linearOpMode.opModeIsActive()) {
     colorRGB = colorAccess.rgbToColor(JewelcolorsensorasLynxI2cColorRangeSensor.getRed(), JewelcolorsensorasLynxI2cColorRangeSensor.getGreen(), JewelcolorsensorasLynxI2cColorRangeSensor.getBlue());
@@ -31,19 +51,6 @@ function SetupLift() {
   liftmotor1.setDirection("FORWARD");
   liftmotor2.setDirection("REVERSE");
   liftmotor1.setDualMode("RUN_WITHOUT_ENCODER", liftmotor2, "RUN_WITHOUT_ENCODER");
-}
-
-/**
- * Describe this function...
- */
-function RaiseLift() {
-  elapsedTimeAccess.reset(RunTimer);
-  liftmotor1.setDualPower(1, liftmotor2, 1);
-  while (elapsedTimeAccess.getMilliseconds(RunTimer) < 1000 && linearOpMode.opModeIsActive()) {
-    telemetry.addTextData('LiftTimer', String(RunTimer));
-    telemetry.update();
-  }
-  liftmotor1.setDualPower(0, liftmotor2, 0);
 }
 
 /**
@@ -96,13 +103,11 @@ function InitMotors() {
 function runOpMode() {
   RunTimer = elapsedTimeAccess.create_withResolution("SECONDS");
   MotorResetPosition();
-  setGrip();
   SetupLift();
   telemetry.addTextData('MotorPositionL', String(frontleftdrive.getCurrentPosition()));
   telemetry.addTextData('MotorPositionR', String(frontrightdrive.getCurrentPosition()));
   telemetry.update();
   linearOpMode.waitForStart();
-  setGripClose();
   RaiseLift();
   InitMotors();
   MotorTargPos(1900, 1900);
